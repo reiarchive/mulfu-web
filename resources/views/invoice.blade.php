@@ -77,7 +77,7 @@
                <div class="overlay"></div>
                <div class="container">
                     <div class="row">
-                         <div class="col-md-12 col-sm-12">
+                         <div class="col-12">
                               <div class="contents text-center">
                                    <h1 class="head-title wow fadeInUp animated animated" style="visibility: visible">Order Detail</h1>
                                    <div class="container-fluid my-5 d-sm-flex justify-content-center">
@@ -89,10 +89,10 @@
                                              </div>
                                              <div class="card-body">
                                                   <div class="invoice-item row justify-content-around py-4 mx-sm-4">
-                                                       <div class="col-lg-3 col-sm-5">
+                                                       <div class="col-3">
                                                             <img class="align-self-center img-fluid" src="https://i.imgur.com/bOcHdBa.jpg">
                                                        </div>
-                                                       <div class="col-lg-8 col-sm-12 d-flex flex-column justify-content-between">
+                                                       <div class="col-8 d-flex flex-column justify-content-between">
                                                             <div>
                                                                  <div class="row p-1">
                                                                       <div class="col-9 d-flex align-items-center">
@@ -134,10 +134,10 @@
                                                        </div>
                                                   </div>
                                                   <div class="invoice-item row justify-content-around py-4 mx-sm-4">
-                                                       <div class="col-lg-3 col-sm-5">
+                                                       <div class="col-3">
                                                             <img class="align-self-center img-fluid" src="https://i.imgur.com/bOcHdBa.jpg">
                                                        </div>
-                                                       <div class="col-lg-8 col-sm-12 d-flex flex-column justify-content-between">
+                                                       <div class="col-8 d-flex flex-column justify-content-between">
                                                             <div>
                                                                  <div class="row p-1">
                                                                       <div class="col-9 d-flex align-items-center">

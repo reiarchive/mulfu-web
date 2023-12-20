@@ -194,3 +194,9 @@ small {
     color: #8c9eff;
     cursor: pointer;
 } */
+
+@media screen and (max-width 600px) {
+    html {
+        font-size: 60%;
+    }
+}
