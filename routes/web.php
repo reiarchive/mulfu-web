@@ -21,3 +21,6 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/invoice/{request_id}', [App\Http\Controllers\TurnitinController::class, 'showInvoice']);
+// Route::get('/test', [App\Http\Controllers\UploadsController::class, 'setPayment']);
