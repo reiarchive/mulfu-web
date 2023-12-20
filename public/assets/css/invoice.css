@@ -1,5 +1,5 @@
 #invoice-area {
-    padding: 170px 0px 50px;
+    padding: 100px 0px 50px;
 }
 
 p {
@@ -195,7 +195,7 @@ small {
     cursor: pointer;
 } */
 
-@media screen and (max-width 600px) {
+@media screen and (max-width: 600px) {
     html {
         font-size: 60%;
     }

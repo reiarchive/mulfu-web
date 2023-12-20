@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::post('/callback/qris', [App\Http\Controllers\CallbackController::class, 'qris']);
+
 Route::post('/turnitin/upload', [App\Http\Controllers\UploadsController::class, 'uploadTurnitinFiles']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

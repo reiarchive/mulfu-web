@@ -81,7 +81,7 @@
                               <div class="contents text-center">
                                    <h1 class="head-title wow fadeInUp animated animated" style="visibility: visible">Order Detail</h1>
                                    <div class="container-fluid my-5 d-sm-flex justify-content-center">
-                                        <div class="card px-2">
+                                        <div class="card px-2" style="border-width: 2px;border-radius: 8px;border-color: #c600ff;border-style: solid;">
                                              <div class="card-header bg-white text-dark">
                                                   <h4 class="mx-sm-4 my-sm-3 m-0 bold">
                                                        Order ID #720311
@@ -89,15 +89,15 @@
                                              </div>
                                              <div class="card-body">
                                                   <div class="invoice-item row justify-content-around py-4 mx-sm-4">
-                                                       <div class="col-3">
-                                                            <img class="align-self-center img-fluid" src="https://i.imgur.com/bOcHdBa.jpg">
+                                                       <div class="col-3" style="display: flex;">
+                                                            <img class="align-self-center img-fluid" src="../assets/img/pdf-file.png">
                                                        </div>
                                                        <div class="col-8 d-flex flex-column justify-content-between">
                                                             <div>
                                                                  <div class="row p-1">
                                                                       <div class="col-9 d-flex align-items-center">
                                                                            <h5 class="bold text-dark lh-lg m-0">
-                                                                                Blade High Heels Sandals
+                                                                                Turnitin
                                                                            </h5>
                                                                       </div>
                                                                       <div class="col-3 d-flex justify-content-end align-items-start">
@@ -111,38 +111,23 @@
                                                                  </div>
                                                                  <div class="row p-1">
                                                                       <div class="col-9">
-                                                                           <h6 class="m-0">SKU ID: 302332483070005</h6>
+                                                                           <h6 class="m-0">FILE ID : 2718-2938-2918</h6>
                                                                       </div>
                                                                  </div>
                                                             </div>
-                                                            <div>
-                                                                 <div class="row p-1">
-                                                                      <div class="col-9 d-flex align-items-center">
-                                                                           <p class="m-0">
-                                                                           <h6 class="text-dark" style="word-spacing: 5px;">
-                                                                                <b>1 piece</b> x $400
-                                                                           </h6>
-                                                                           </p>
-                                                                      </div>
-                                                                      <div class="col-3 d-flex justify-content-end align-items-center">
-                                                                           <h6 class="bold text-dark m-0">
-                                                                                $400
-                                                                           </h6>
-                                                                      </div>
-                                                                 </div>
-                                                            </div>
+
                                                        </div>
                                                   </div>
                                                   <div class="invoice-item row justify-content-around py-4 mx-sm-4">
-                                                       <div class="col-3">
-                                                            <img class="align-self-center img-fluid" src="https://i.imgur.com/bOcHdBa.jpg">
+                                                       <div class="col-3" style="display: flex;">
+                                                            <img class="align-self-center img-fluid" src="../assets/img/pdf-file.png">
                                                        </div>
                                                        <div class="col-8 d-flex flex-column justify-content-between">
                                                             <div>
                                                                  <div class="row p-1">
                                                                       <div class="col-9 d-flex align-items-center">
                                                                            <h5 class="bold text-dark lh-lg m-0">
-                                                                                Blade High Heels Sandals KW
+                                                                                Turnitin
                                                                            </h5>
                                                                       </div>
                                                                       <div class="col-3 d-flex justify-content-end align-items-start">
@@ -160,20 +145,7 @@
                                                                       </div>
                                                                  </div>
                                                             </div>
-                                                            <div>
-                                                                 <div class="row p-1">
-                                                                      <div class="col-9 d-flex align-items-center">
-                                                                           <h6 class="text-dark m-0" style="word-spacing: 5px;">
-                                                                                <b>2 pieces</b> x $300
-                                                                           </h6>
-                                                                      </div>
-                                                                      <div class="col-3 d-flex justify-content-end align-items-center">
-                                                                           <h6 class="bold text-dark m-0">
-                                                                                $600
-                                                                           </h6>
-                                                                      </div>
-                                                                 </div>
-                                                            </div>
+
                                                        </div>
                                                   </div>
 
@@ -181,9 +153,18 @@
                                              <div class="row justify-content-around pt-1 pb-4 mx-4" style="padding-left: 1.25rem; padding-right: 1.25rem;">
                                                   <div class="col-3"></div>
                                                   <div class="col-lg-8 col-sm-12 d-flex flex-column justify-content-between">
+
                                                        <div class="row p-1">
                                                             <div class="col-9 d-flex align-items-center">
-                                                                 <h6 class="text-dark m-0" style="word-spacing: 5px;">
+                                                                 <h6 class="text-dark m-0" style="">Phone Number</h6>
+                                                            </div>
+                                                            <div class="col-3 d-flex justify-content-end align-items-center">
+                                                                 <h6 class="bold text-dark m-0">082265040091</h6>
+                                                            </div>
+                                                       </div>
+                                                       <div class="row p-1">
+                                                            <div class="col-9 d-flex align-items-center">
+                                                                 <h6 class="text-dark m-0">
                                                                       Total Items:
                                                                  </h6>
                                                             </div>
@@ -193,18 +174,7 @@
                                                                  </h6>
                                                             </div>
                                                        </div>
-                                                       <div class="row p-1">
-                                                            <div class="col-9 d-flex align-items-center">
-                                                                 <h6 class="text-dark m-0" style="word-spacing: 5px;">
-                                                                      Additional Fees:
-                                                                 </h6>
-                                                            </div>
-                                                            <div class="col-3 d-flex justify-content-end align-items-center">
-                                                                 <h6 class="bold text-dark m-0">
-                                                                      $10
-                                                                 </h6>
-                                                            </div>
-                                                       </div>
+
                                                   </div>
                                              </div>
                                              <div class="card-footer  bg-white ">
