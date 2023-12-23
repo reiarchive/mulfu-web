@@ -57,10 +57,10 @@ class OTPController extends Controller
 
         $userOTP = $this->makeOTP($userId);
         try {
-            Redis::publish('sendOTP', json_encode(["phone_number" => $phone_number, "otp" => (string)$userOTP]));
+            Redis::publish('send_message', json_encode(["phone_number" => $phone_number, "message" => "OTP : ". (string)$userOTP]));
 
             $prefix = config('database.redis.options.prefix');
-            $channel = $prefix . 'sendOTP';
+            $channel = $prefix . 'send_message';
 
             return response()->json(["error" => 0, "message" => "OTP Successfully Sent $channel"]);
         } catch (\Exception $e) {

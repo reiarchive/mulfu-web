@@ -2,18 +2,19 @@
 
 namespace App\Jobs;
 
-use Illuminate\Support\Facades\Log;
-
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\DB;
-use App\Models\TurnitinAvailable;
-use App\Models\UserTransaction;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
+
+use App\Models\UserTransaction;
+use App\Models\TurnitinAvailable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 
 class ProcessTurnitinJob implements ShouldQueue
 {
@@ -36,6 +37,14 @@ class ProcessTurnitinJob implements ShouldQueue
      *
      * @return void
      */
+
+    private function sendInvoice($phone_number)
+    {
+        $messageSendInvoice = str_replace('{{ nomor_file }}', $this->invoice_id, env("MESSAGE_SEND_INVOICE"));
+        Redis::publish('send_message', json_encode(["phone_number" => $phone_number, "message" => $messageSendInvoice]));
+
+        return true;
+    }
     public function handle()
     {
 
@@ -45,8 +54,16 @@ class ProcessTurnitinJob implements ShouldQueue
         // $userTransactions = UserTransaction::withwhere(['tx_id' => $this->invoice_id, 'status' => 'paid'])->get();
         $userTransactions = UserTransaction::with('user')->where(['user_transactions.tx_id' => $this->invoice_id, 'user_transactions.status' => 'paid'])->get();
 
+        if ($userTransactions->isEmpty()) {
+            Log::info("[TX_ID : " . $this->invoice_id . "] Transaksi tidak ada atau tidak tersedia");
+            return false;
+        }
+
+        $this->sendInvoice($userTransactions[0]->user->phone_number);
+
         Log::info($userTransactions);
         foreach ($userTransactions as $userTransaction) {
+
             Log::info('Job processing : ' . $userTransaction);
 
             try {

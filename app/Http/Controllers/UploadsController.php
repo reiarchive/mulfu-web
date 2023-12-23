@@ -94,6 +94,7 @@ class UploadsController extends Controller
         $response = Http::withHeaders($headers)->post($url, $requestBody);
 
         $responseData = $response->json();
+        // var_dump($responseData);
 
         if ($responseData['message'][0] == 'SUCCESS') {
             return ['url' => $responseData['response']['payment']['url'], 'callback' => $responseData['response']['order']['callback_url']];
@@ -128,7 +129,7 @@ class UploadsController extends Controller
         }
 
         // $userId = $this->getUserId($request->phone_number);
-        $tx_id = 'PLAG-' . now()->format('YmdHisu');
+        $tx_id = 'TURN-' . strtoupper(Str::random(4)) . strtoupper(Str::random(4));
         $request_id = str_replace('-', '', Str::uuid()->toString());
 
         foreach ($request->file('files') as $file) {

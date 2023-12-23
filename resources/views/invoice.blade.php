@@ -106,7 +106,9 @@
                                                                  <div class="row p-1">
                                                                       <div class="col-9">
 
-                                                                           <h6 class="m-0">{{ \Carbon\Carbon::parse($item['created_at'])->format('d F Y H:i:s T') }}</h6>
+                                                                           <h6 class="m-0">
+                                                                                {{ \Carbon\Carbon::parse($item['created_at'])->tz('Asia/Jakarta')->format('d F Y H:i:s T') }}
+                                                                           </h6>
                                                                       </div>
                                                                  </div>
                                                                  <div class="row p-1">
