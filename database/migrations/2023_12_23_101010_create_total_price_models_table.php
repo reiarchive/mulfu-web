@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserTransactionsTable extends Migration
+class CreateTotalPriceModelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class CreateUserTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_transactions', function (Blueprint $table) {
+        Schema::create('total_price_models', function (Blueprint $table) {
             $table->id();
-            $table->string('file_location');
-            $table->integer('user_id')->nullable();
-            $table->string('file_id');
             $table->string('tx_id');
             $table->string('req_id');
-            $table->enum('status', ['waiting payment', 'paid', 'processing', 'waiting for delivered', 'failed', 'success', 'cancel']);
+            $table->integer('price');
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ class CreateUserTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_transactions');
+        Schema::dropIfExists('total_price_models');
     }
 }

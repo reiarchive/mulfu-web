@@ -1,20 +1,33 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+use App\Models\UserTransaction;
 use App\Jobs\ProcessTurnitinJob;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\UserTransactionController;
 
 class TurnitinController extends Controller
 {
-    public function checkPayment($invoice_id) {
+
+    protected $userTransactionController;
+
+    public function __construct(UserTransactionController $userTransactionController)
+    {
+        $this->userTransactionController = $userTransactionController;
+    }
+
+    public function checkPayment($invoice_id)
+    {
         $isoDateTime = Carbon::now()->toIso8601String();
         $dateTimeFinal = substr($isoDateTime, 0, 19) . "Z";
 
         $getUrl = 'https://api.doku.com';
-        $targetPath = '/orders/v1/status/'. $invoice_id;
+        $targetPath = '/orders/v1/status/' . $invoice_id;
         $url = $getUrl . $targetPath;
 
         // Prepare signature component
@@ -38,8 +51,9 @@ class TurnitinController extends Controller
         $response = Http::withHeaders($headers)->get($url);
 
         $responseData = $response->json();
+        // var_dump($responseData);
 
-        if(isset($responseData['error'])) {
+        if (isset($responseData['error'])) {
             return false;
         }
 
@@ -48,20 +62,35 @@ class TurnitinController extends Controller
 
     public function showInvoice($invoice_id)
     {
-        $paymentStatus = 'SUCCESS';
+        $invoice = UserTransaction::with('user')->where(['user_transactions.tx_id' => $invoice_id])->get();
 
-        // $paymentStatus = $this->checkPayment($invoice_id);
-        
-        // if(!$paymentStatus) {
-        //     return response()->json(['status' => 'error'], 200);
-        // }
+        // $invoice = UserTransaction::where(['tx_id' => $invoice_id])->get();
 
-        if($paymentStatus == 'SUCCESS') {
-            // ProcessTurnitinJob::dispatch($invoice_id);
+        if ($invoice->isEmpty()) {
+            return response()->json(['status' => 'error', 'message' => 'Invoice tidak ditemukan'], 200);
         }
-        
-        // return response()->json(['status' => $paymentStatus], 200);
-        return view('invoice', ['status' => $paymentStatus]);
 
+        if ($invoice[0]['status'] == 'waiting payment') {
+
+            $paymentStatus = $this->checkPayment($invoice_id);
+
+            if (!$paymentStatus) {
+                return response()->json(['status' => 'error'], 200);
+            }
+
+            if ($paymentStatus == 'SUCCESS') {
+
+                $changeStatus = $this->userTransactionController->setStatus($invoice_id, 'waiting payment', 'paid');
+
+                if ($changeStatus) {
+                    ProcessTurnitinJob::dispatch($invoice_id);
+                }
+            }
+        }
+
+        // $getInvoice = UserTransaction::where(['tx_id' => $invoice_id])->get();
+        // var_dump($invoice[0]);
+
+        return view('invoice', ['status' => $invoice, 'phone_number' => $invoice[0]->user->phone_number]);
     }
 }

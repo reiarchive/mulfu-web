@@ -41,4 +41,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function UserTransaction()
+    {
+        return $this->hasMany(UserTransaction::class, 'user_id');
+    }
+
+    public function OneTimePassword()
+    {
+        return $this->hasMany(OneTimePassword::class, 'user_id');
+    }
 }

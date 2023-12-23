@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserTransaction;
+use Exception;
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\FileData;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use App\Models\TotalPriceModel;
+use App\Models\UserTransaction;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UploadsController extends Controller
 {
-    public function setPayment($invoice_number, $request_id)
+    public function setPayment($invoice_number, $request_id, $price, $total_items)
     {
         $currentDateTime = Carbon::now();
 
@@ -26,21 +30,20 @@ class UploadsController extends Controller
 
         $requestBody = [
             'order' => [
-                'amount' => 1000,
+                'amount' => $price,
                 'invoice_number' => $invoice_number, // Change to your business logic
                 'currency' => 'IDR',
-                'callback_url' => 'https://mulfu.co/invoice/'. $invoice_number,
-                'auto_redirect' => true,
+                'callback_url' => 'https://mulfu.co/invoice/' . $invoice_number,
                 'line_items' => [
                     [
                         'name' => 'Plagiarism Check',
                         'price' => 1000,
-                        'quantity' => 1,
+                        'quantity' => $total_items,
                     ],
                 ],
             ],
             'payment' => [
-                'payment_due_date' => 60,
+                'payment_due_date' => 3,
                 "payment_method_types" => [
                     "QRIS",
                 ]
@@ -77,7 +80,6 @@ class UploadsController extends Controller
 
         // Generate signature
         $signature = base64_encode(hash_hmac('sha256', $componentSignature, env('DOKU_SECRET_KEY'), true));
-        echo $signature;
 
         $headers = [
             'Content-Type' => 'application/json',
@@ -96,17 +98,17 @@ class UploadsController extends Controller
         if ($responseData['message'][0] == 'SUCCESS') {
             return ['url' => $responseData['response']['payment']['url'], 'callback' => $responseData['response']['order']['callback_url']];
         } else {
+            Log::info($responseData);
             return false;
         }
     }
 
     public function getUserId($phone_number)
     {
-        $user = User::firstOrNew(['phone_number' => $phone_number]);
+        $user = User::where('phone_number', $phone_number)->first();
 
-        if (!$user->exists) {
-            $user->phone_number = $phone_number;
-            $user->save();
+        if (!$user) {
+            return false;
         }
 
         return $user->id;
@@ -114,6 +116,8 @@ class UploadsController extends Controller
 
     public function uploadTurnitinFiles(Request $request)
     {
+        $totalPrice = 0;
+
         // Validate the incoming request
         $validator = Validator::make($request->all(), [
             'files.*' => 'required|mimes:pdf,docx|max:2048000',
@@ -123,47 +127,80 @@ class UploadsController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
 
-        $userId = $this->getUserId($request->phone_number);
- 
-        // Generate tx_id and req_id
+        // $userId = $this->getUserId($request->phone_number);
         $tx_id = 'PLAG-' . now()->format('YmdHisu');
         $request_id = str_replace('-', '', Str::uuid()->toString());
 
-        // Process each uploaded file
         foreach ($request->file('files') as $file) {
-            $customName = Str::random(20);
 
-            $path = $file->storeAs('uploads', $customName . '.' . $file->getClientOriginalExtension());
+            $path = $file->storeAs('uploads', Str::random(20) . '.' . $file->getClientOriginalExtension());
 
             // Preparing save
+            $file_id = UserTransaction::generateRandomId();
+
             $userTransaction = new UserTransaction();
 
-            /*
-            * $table->id();
-            * $table->string('file_location');
-            * $table->integer('user_id');
-            * $table->string('file_id');
-            * $table->string('tx_id');
-            * $table->string('req_id');
-            * $table->enum('status', ['waiting payment', 'processing', 'failed', 'success', 'cancel']);
-            */
-
             $userTransaction->file_location = $path;
-            $userTransaction->user_id = $userId;
-            $userTransaction->file_id = str_replace('-', '', Str::uuid()->toString());
+            // $userTransaction->user_id = $userId;
+            $userTransaction->file_id = $file_id;
             $userTransaction->tx_id = $tx_id;
             $userTransaction->req_id = $request_id;
             $userTransaction->status = 'waiting payment';
 
             $userTransaction->save();
+
+            $fileData = new FileData();
+            $fileData->file_id = $file_id;
+            $fileData->real_file_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $fileData->save();
+
+            $totalPrice += 1000;
         }
 
-        $url = $this->setPayment($tx_id, $request_id);
+        $totalPriceModel = new TotalPriceModel();
+        $totalPriceModel->tx_id = $tx_id;
+        $totalPriceModel->req_id = $request_id;
+        $totalPriceModel->price = $totalPrice;
+        $totalPriceModel->save();
 
-        if (!$url) {
-            return response()->json(['message' => 'Files failed uploaded',], 200);
+        return response()->json(['message' => 'Files uploaded successfully', 'data' => ['request_id' => $request_id, 'price' => $totalPrice]], 200);
+    }
+
+    public function setDetailAndMakePayment(Request $request)
+    {
+        try {
+            $userId = $this->getUserId($request->phone_number);
+
+
+            /* Set destination */
+            $transactions = UserTransaction::where('req_id', $request->request_id)->get();
+
+            foreach ($transactions as $transaction) {
+                /* Update user_id*/
+                $transaction->user_id = $userId;
+                $transaction->save();
+
+                /* Set file data */
+                $fileDetail = FileData::where('file_id', $transaction->file_id)->first();
+                $fileDetail->title = trim($request->file['title']) ?? "Turnitin";
+                $fileDetail->first_author = trim($request->file['first_author']) ?? "By";
+                $fileDetail->second_author = trim($request->file['second_author']) ?? "Turnitin";
+                $fileDetail->save();
+            }
+
+            $price = TotalPriceModel::where("req_id", $request->request_id)->value("price");
+            $total_items = $transactions->count();
+
+            $url = $this->setPayment($transactions->first()->tx_id, $transactions->first()->req_id, $price, $total_items);
+
+            if (!$url) {
+                return response()->json(['error' => 1], 200);
+            }
+
+            return response()->json(['error' => 0, 'url' => $url['url']], 200);
+        } catch (\Exception $e) {
+            Log::info("[ERROR EXCEPTION] " . $e);
+            return response()->json(['error' => 1, 'message' => 'Internal server error'], 200);
         }
-
-        return response()->json(['message' => 'Files uploaded successfully', 'url' => $url['url'], 'callback' => $url['callback']], 200);
     }
 }

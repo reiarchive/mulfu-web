@@ -2,7 +2,7 @@
 var formData = new FormData();
 
 function uploadFiles() {
-    
+
     const xhr = new XMLHttpRequest();
 
     // Track the upload progress
@@ -15,7 +15,17 @@ function uploadFiles() {
 
     // Handle the upload completion
     xhr.addEventListener('load', function () {
-        console.log('Files uploaded successfully');
+        // Check if the response content type is JSON
+        if (xhr.getResponseHeader('content-type') === 'application/json') {
+            var jsonResponse = JSON.parse(xhr.responseText);
+
+            $("#request_id").val(jsonResponse['data']['request_id']);
+            $("#totalAmount").text("Rp. " + jsonResponse['data']['price']);
+
+            console.log('Files uploaded successfully:', jsonResponse);
+        } else {
+            console.error('Unexpected response format. Expected JSON.');
+        }
     });
 
     // Handle errors during the upload
@@ -48,6 +58,13 @@ function updateProgressBar(percentComplete) {
     });
 }
 
+function isValidFileType(file) {
+    const allowedMimeTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf'];
+    const mimeType = file.type;
+
+    return allowedMimeTypes.includes(mimeType);
+}
+
 function handleFileSelect(event) {
 
     const fileList = document.getElementById("fileUploadList");
@@ -55,6 +72,16 @@ function handleFileSelect(event) {
 
     const files = event.target.files;
     for (let i = 0; i < files.length; i++) {
+
+        if (!isValidFileType(files[i])) {
+            Swal.fire({
+                title: "Gagal",
+                text: "File harus .docx, .doc, atau .pdf",
+                icon: "error"
+            });
+            continue;
+        }
+
         const elementToAdd = `<div class="container mt-12" style="color: black; /* flex: 1 1 0%; */ /* display: flex; */ /* flex-direction: column; */ /* align-items: center; */ /* padding: 65px; */ border-width: 2px; border-radius: 8px; border-color: #7e57a3; border-style: solid; /* background-color: rgb(250, 250, 250); */ color: rgb(189, 189, 189); outline: none; /* transition: border 0.24s ease-in-out 0s; */ /* cursor: pointer; */ margin-top: 20px">
         <div class="row align-items-center">
             <div class="col-auto">
@@ -94,6 +121,6 @@ const fileInput = document.getElementById("upload_dokumen");
 fileInput.addEventListener("change", handleFileSelect);
 
 $(document).ready(() => {
-    formData.append('phone_number', '082114080612');
+    // formData.append('phone_number', '6282265040091');
     $("#submit-file").click(uploadFiles);
 })

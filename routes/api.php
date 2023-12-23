@@ -15,7 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/callback/qris', [App\Http\Controllers\CallbackController::class, 'qris']);
+Route::post('/otp/send', [App\Http\Controllers\OTPController::class, 'sendOTP']);
+Route::post('/otp/verify', [App\Http\Controllers\OTPController::class, 'verifyOTP']);
 
+Route::post('/turnitin/make-payment', [App\Http\Controllers\UploadsController::class, 'setDetailAndMakePayment']);
 Route::post('/turnitin/upload', [App\Http\Controllers\UploadsController::class, 'uploadTurnitinFiles']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

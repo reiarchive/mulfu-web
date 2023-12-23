@@ -308,7 +308,7 @@ hr {
     padding-left: 140px;
 }
 
-.text-wrapper > div {
+.text-wrapper>div {
     vertical-align: middle;
     display: table-cell;
 }
@@ -482,16 +482,16 @@ hr {
 }
 
 .navbar-expand-lg .navbar-nav li a:hover,
-.navbar-expand-lg .navbar-nav li .active > a,
+.navbar-expand-lg .navbar-nav li .active>a,
 .navbar-expand-lg .navbar-nav li a:focus {
     color: #137ed9;
     outline: none;
 }
 
-.navbar-expand-lg .navbar-nav .active > .nav-link,
+.navbar-expand-lg .navbar-nav .active>.nav-link,
 .navbar-expand-lg .navbar-nav .nav-link.active,
 .navbar-expand-lg .navbar-nav .nav-link.open,
-.navbar-expand-lg .navbar-nav .open > .nav-link {
+.navbar-expand-lg .navbar-nav .open>.nav-link {
     color: #137ed9 !important;
 }
 
@@ -1335,4 +1335,115 @@ textarea {
 
 #copyright p a:hover {
     color: #137ed9;
+}
+
+.main-box {
+    color: black;
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+    padding: 29px;
+    border-width: 2px;
+    border-radius: 8px;
+    border-color: #c600ff;
+    border-style: solid;
+    background-color: rgb(250, 250, 250);
+    color: rgb(189, 189, 189);
+    outline: none;
+    transition: border 0.24s ease-in-out 0s
+}
+
+#progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    color: #455a64;
+    padding-left: 0px;
+    margin-top: 30px;
+}
+
+#progressbar li {
+    list-style-type: none;
+    font-size: 13px;
+    width: 33.33%;
+    float: left;
+    position: relative;
+    font-weight: 400;
+    color: #455a64 !important;
+}
+
+#progressbar #step1:before {
+    content: "1";
+    color: #fff;
+    width: 29px;
+    cursor: pointer;
+}
+
+#progressbar #step2:before {
+    content: "2";
+    color: #fff;
+    width: 29px;
+    cursor: pointer;
+}
+
+#progressbar #step3:before {
+    content: "3";
+    color: #fff;
+    width: 29px;
+    cursor: pointer;
+}
+
+#progressbar li:before {
+    line-height: 29px;
+    display: block;
+    font-size: 12px;
+    background: #cfcdcf;
+    border-radius: 50%;
+    margin: auto;
+}
+
+#progressbar li:after {
+    content: "";
+    width: 121%;
+    height: 2px;
+    background: #455a64;
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    top: 15px;
+    z-index: -1;
+}
+
+#progressbar li:nth-child(2):after {
+    left: 50%;
+}
+
+#progressbar li:nth-child(1):after {
+    left: 25%;
+    width: 121%;
+}
+
+#progressbar li:nth-child(3):after {
+    left: 25% !important;
+    width: 50% !important;
+}
+
+#progressbar li.active:before,
+#progressbar li.active:after {
+    background: #a60ec5;
+}
+
+.order-steps {
+    display: none;
+}
+
+.order-steps.active {
+    display: block;
+}
+
+.form-hidden {
+    display:none;
+}
+
+.label-form {
+    color: #000000;
 }
