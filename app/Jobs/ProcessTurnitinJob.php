@@ -2,8 +2,9 @@
 
 namespace App\Jobs;
 
-use Illuminate\Bus\Queueable;
+use App\Models\FileData;
 
+use Illuminate\Bus\Queueable;
 use App\Models\UserTransaction;
 use App\Models\TurnitinAvailable;
 use Illuminate\Support\Facades\DB;
@@ -40,8 +41,9 @@ class ProcessTurnitinJob implements ShouldQueue
 
     private function sendInvoice($phone_number)
     {
+        $requestId = uniqid();
         $messageSendInvoice = str_replace('{{ nomor_file }}', $this->invoice_id, env("MESSAGE_SEND_INVOICE"));
-        Redis::publish('send_message', json_encode(["phone_number" => $phone_number, "message" => $messageSendInvoice]));
+        Redis::publish('send_message', json_encode(["phone_number" => $phone_number, "message" => $messageSendInvoice, "request_id" => $requestId]));
 
         return true;
     }
@@ -62,12 +64,15 @@ class ProcessTurnitinJob implements ShouldQueue
         $this->sendInvoice($userTransactions[0]->user->phone_number);
 
         Log::info($userTransactions);
+        
         foreach ($userTransactions as $userTransaction) {
 
             Log::info('Job processing : ' . $userTransaction);
 
             try {
+                
                 $fileId = $userTransaction->file_id;
+                $fileDetailData = FileData::where('file_id', $fileId)->first();
 
                 $userTransaction->status = "processing";
                 $userTransaction->save();
@@ -81,7 +86,12 @@ class ProcessTurnitinJob implements ShouldQueue
                     $postData = [
                         'process' => $randomProcess->class_id,
                         'fileId' => $fileId,
-                        'phoneNumber' => $userTransaction->user->phone_number
+                        'phoneNumber' => $userTransaction->user->phone_number,
+                        'file' => [
+                            'title' => $fileDetailData['title'],
+                            'first_author' => $fileDetailData['first_author'],
+                            'second_author' => $fileDetailData['second_author'],
+                        ]
                     ];
                     LOG::info($postData);
 

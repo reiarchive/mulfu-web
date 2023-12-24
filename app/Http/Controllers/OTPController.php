@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use stdClass;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\OneTimePassword;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 class OTPController extends Controller
@@ -47,7 +49,7 @@ class OTPController extends Controller
 
     public function sendOTP(Request $request)
     {
-        $phone_number = $request->phone_number;
+        $phone_number = substr($request->phone_number, 0, 1) == '0' ? '62' . substr($request->phone_number, 1) : $request->phone_number;
 
         if (!User::where("phone_number", $phone_number)->exists()) {
             $userId = $this->createUser($phone_number);
@@ -57,12 +59,43 @@ class OTPController extends Controller
 
         $userOTP = $this->makeOTP($userId);
         try {
-            Redis::publish('send_message', json_encode(["phone_number" => $phone_number, "message" => "OTP : ". (string)$userOTP]));
 
-            $prefix = config('database.redis.options.prefix');
-            $channel = $prefix . 'send_message';
+            $messageSendOTP = str_replace('{{ otp }}', (string)$userOTP, env("MESSAGE_SEND_OTP"));
 
-            return response()->json(["error" => 0, "message" => "OTP Successfully Sent $channel"]);
+            $requestId = uniqid();
+            $response = new stdClass();
+            Redis::publish('send_message', json_encode(["phone_number" => $phone_number, "message" => $messageSendOTP, "request_id" => $requestId]));
+
+            $pubsub = Redis::pubSubLoop();
+            $pubsub->subscribe('receive_message');
+
+            $timeout = now()->addSeconds(5);
+
+            while (now()->lt($timeout)) {
+
+                foreach ($pubsub as $message) {
+                    $decodedMessage = json_decode($message->payload);
+                    if (is_object($decodedMessage) && property_exists($decodedMessage, 'request_id')) {
+                        if ($decodedMessage->request_id == $requestId) {
+                            $response = $decodedMessage;
+                            $pubsub->unsubscribe();
+                        }
+                    }
+                    break;
+                }
+
+                if (count((array)$response) !== 0) {
+                    break;
+                }
+            }
+
+
+            if ($response->error == 0) {
+                return response()->json(["error" => 0, "message" => "OTP Successfully Sent"]);
+            }
+            
+            return response()->json(["error" => 1, "message" => "Nomor whatsapp tidak ditemukan"]);
+
         } catch (\Exception $e) {
             var_dump($e);
         }
@@ -70,7 +103,8 @@ class OTPController extends Controller
 
     public function verifyOTP(Request $request)
     {
-        $phone_number = $request->phone_number;
+        $phone_number = substr($request->phone_number, 0, 1) == '0' ? '62' . substr($request->phone_number, 1) : $request->phone_number;
+
         $otp = $request->otp;
 
         // Corrected query to use the 'user_id' column
@@ -88,7 +122,7 @@ class OTPController extends Controller
         if ($existingOTP->otp == $otp) {
             // Mark the OTP as used
             $existingOTP->update(['is_used' => 1]);
-            
+
             return response()->json(["error" => 0, "message" => "OTP Verified"]);
         } else {
             return response()->json(["error" => 1, "message" => "OTP Wrong"]);

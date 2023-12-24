@@ -1,5 +1,6 @@
 // Function to handle file selection
 var formData = new FormData();
+var fileInput = document.getElementById("upload_dokumen");
 
 function uploadFiles() {
 
@@ -65,12 +66,23 @@ function isValidFileType(file) {
     return allowedMimeTypes.includes(mimeType);
 }
 
-function handleFileSelect(event) {
+function handleFileSelect(files) {
+
+    const req_id = $("#request_id").val();
+
+    if (req_id.trim() !== "") {
+        Swal.fire({
+            title: "Gagal",
+            text: "File sudah di submit",
+            icon: "error"
+        });
+        return;
+    }
 
     const fileList = document.getElementById("fileUploadList");
 
 
-    const files = event.target.files;
+    files = (files && files.target && files.target.files) ? files.target.files : files;
     for (let i = 0; i < files.length; i++) {
 
         if (!isValidFileType(files[i])) {
@@ -105,7 +117,7 @@ function handleFileSelect(event) {
 
                 <!-- File Progress -->
                 <div class="progress mt-2">
-                    <div class="progress-bar" role="progressbar" style="width: 100%; background: #7e57a3" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">50%</div>
+                    <div class="progress-bar" role="progressbar" style="width: 0%; background: #7e57a3" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">0%</div>
                 </div>
             </div>
         </div>
@@ -117,10 +129,38 @@ function handleFileSelect(event) {
 }
 
 // Attach the function to the file input change event
-const fileInput = document.getElementById("upload_dokumen");
 fileInput.addEventListener("change", handleFileSelect);
 
 $(document).ready(() => {
     // formData.append('phone_number', '6282265040091');
-    $("#submit-file").click(uploadFiles);
+    $("#submit-file").click(function () {
+        const req_id = $("#request_id").val();
+        if (req_id.trim() !== "") {
+            Swal.fire({
+                title: "Gagal",
+                text: "File sudah di submit",
+                icon: "error"
+            });
+        } else {
+            console.log("No file has been submitted. Performing action B.");
+            uploadFiles();
+        }
+    });
+
+    var dropZone = $('#drop-zone');
+
+    // Prevent the default behavior for the drop event
+    dropZone.on('dragover', function (e) {
+        e.preventDefault();
+    });
+
+    // Handle the drop event
+    dropZone.on('drop', function (e) {
+        e.preventDefault();
+
+        var files = e.originalEvent.dataTransfer.files;
+
+        handleFileSelect(files);
+    });
+
 })

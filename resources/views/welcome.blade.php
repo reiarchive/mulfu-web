@@ -45,7 +45,7 @@
                         <span class="icon-menu"></span>
                         <span class="icon-menu"></span>
                     </button>
-                    <a href="index.html" class="navbar-brand"><img src="assets/img/logo.png" alt="" /></a>
+                    <a href="/" class="navbar-brand"><img src="assets/img/logo.png" alt="" /></a>
                 </div>
                 <div class="collapse navbar-collapse" id="main-navbar">
                     <ul class="navbar-nav mr-auto w-100 justify-content-left clearfix">
@@ -79,12 +79,12 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
                         <div class="contents text-center">
-                            <h2 class="head-title wow fadeInUp animated animated" style="visibility: visible">Cek plagiasi cepat no repository 24 jam, di mulfu!</h2>
+                            <h2 class="head-title wow fadeInUp animated animated" style="visibility: visible">Cek plagiasi turnitin no repository 24 jam, di mulfu!</h2>
                             <div class="header-button wow fadeInUp animated animated container animated animated animated animated animated animated animated" data-wow-delay="0.3s" style="visibility: visible; -webkit-animation-delay: 0.3s; -moz-animation-delay: 0.3s; animation-delay: 0.3s">
                                 <div class="row">
                                     <div class="col-12 col-sm-2 d-none d-lg-block" style="color: black">
-                                        Gratis buat 100 pengguna pertama!
-                                        <img class="icon faded" width="50" height="40" src="assets/img/arrow.png" alt="pdf file" />
+                                        <!-- Gratis buat 100 pengguna pertama!
+                                        <img class="icon faded" width="50" height="40" src="assets/img/arrow.png" alt="pdf file" /> -->
                                     </div>
                                     <div class="col-12 col-lg-8 text-center mx-auto main-box">
                                         <div class="col" style="flex-basis: fit-content;">
@@ -95,7 +95,7 @@
                                             </ul>
 
                                             <div class="order-steps active steps-1" id="steps-1" data-steps="1">
-                                                <div class="container">
+                                                <div class="container" id="drop-zone">
                                                     <input type="file" id="upload_dokumen" name="files[]" multiple hidden />
                                                     <label for="upload_dokumen" style="width: 100%">
                                                         <div class="row">
@@ -129,7 +129,7 @@
                                                 <form class="text-left">
                                                     <div class="form-group input-whatsapp">
                                                         <label for="phoneNumber" class="label-form">Nomor whatsapp :</label>
-                                                        <input type="tel" class="form-control" id="phoneNumber" placeholder="Masukkan nomor whatsapp kamu">
+                                                        <input type="tel" class="form-control" id="phoneNumber" placeholder="62xxxxxxxxxx">
                                                     </div>
 
                                                     <div class="form-group input-otp" hidden>
@@ -148,12 +148,12 @@
                                                         <input type="text" class="form-control" id="fileTitle" placeholder="Judul (Optional)">
                                                     </div>
 
-                                                    <div class="form-group form-hidden">
+                                                    <div class="form-group" hidden>
                                                         <label for="firstAuthorName" class="label-form">Author pertama:</label>
                                                         <input type="text" class="form-control" id="firstAuthorName" placeholder="author pertama (Optional)">
                                                     </div>
 
-                                                    <div class="form-group form-hidden">
+                                                    <div class="form-group" hidden>
                                                         <label for="secondAuthorName" class="label-form">Author kedua:</label>
                                                         <input type="text" class="form-control" id="secondAuthorName" placeholder="author kedua (Optional)">
                                                     </div>
@@ -194,7 +194,9 @@
                                                             <img src="/assets/img/qris.jpg" alt="Image Checkbox" height="170px" width="170px">
                                                         </label>
                                                     </div>
-
+                                                    <div class="mb-3">
+                                                        <p style="font-weight: 700;color: #000000; font-size: 14px">Kamu akan di alihkan ke halaman pembayaran setelah klik tombol dibawah ini.</p>
+                                                    </div>
                                                     <!-- Submit Button -->
                                                     <div class="mb-3">
                                                         <div class="col-md-4 col-sm-6 mx-auto" style="margin-top: 15px;">
@@ -207,7 +209,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-2 d-none d-lg-block" style="color: black">Check sekarang!</div>
+                                    <div class="col-12 col-sm-2 d-none d-lg-block" style="color: black"></div>
                                     <!-- Force next columns to break to new line -->
                                 </div>
                             </div>
@@ -231,7 +233,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-6 col-md-6 col-lg-8">
+                <div class="col-12">
                     <!-- Team Item Starts -->
                     <div class="text-left">
                         <div>
@@ -240,15 +242,10 @@
                         <div>
                             <h5 style="font-weight: 400; color: #440b55">1. Upload file kamu di kotak diatas</h5>
                             <h5 style="font-weight: 400; color: #440b55">2. Masukkan nomor wa dan filter (optional)</h5>
-                            <h5 style="font-weight: 400; color: #440b55">3. Payment, dan selesai. Kamu tinggal menunggu file dikirim melalui whatsapp!</h5>
+                            <h5 style="font-weight: 400; color: #440b55">3. Bayar, dan selesai. Kamu tinggal menunggu file dikirim melalui whatsapp!</h5>
                         </div>
                         <a href="#hero-area"><button class="btn" style="background-color: #7e57a3; border-radius: 5px; max-width: 140px; padding: 10px">Cobain disini!</button></a>
                     </div>
-                    <!-- Team Item Ends -->
-                </div>
-                <div class="col-sm-6 col-md-6 col-lg-4">
-                    <!-- Team Item Starts -->
-                    <img class="" src="assets/demo.gif" height="400" style="width: inherit" />
                     <!-- Team Item Ends -->
                 </div>
             </div>
@@ -428,7 +425,7 @@
                         } else {
                             Swal.fire({
                                 title: "Gagal",
-                                text: "OTP gagal dikirim, coba lagi yuk",
+                                text: response.message,
                                 icon: "error"
                             });
                         }
@@ -456,6 +453,8 @@
                         icon: "error"
                     });
 
+                    $("#step1").click();
+
                     return;
                 }
 
@@ -467,6 +466,8 @@
                         text: "Nomor wa kamu belum di verif nih, cek langkah kedua yuk!",
                         icon: "error"
                     });
+
+                    $("#step2").click();
 
                     return;
                 }

@@ -183,9 +183,9 @@ class UploadsController extends Controller
 
                 /* Set file data */
                 $fileDetail = FileData::where('file_id', $transaction->file_id)->first();
-                $fileDetail->title = trim($request->file['title']) ?? "Turnitin";
-                $fileDetail->first_author = trim($request->file['first_author']) ?? "By";
-                $fileDetail->second_author = trim($request->file['second_author']) ?? "Turnitin";
+                $fileDetail->title = trim($request->file['title']) == "" ? "Turnitin" : trim($request->file['title']);
+                $fileDetail->first_author = trim($request->file['first_author']) == "" ? "by" : trim($request->file['first_author']);
+                $fileDetail->second_author = trim($request->file['second_author']) == "" ? "Turnitin" : trim($request->file['second_author']);
                 $fileDetail->save();
             }
 

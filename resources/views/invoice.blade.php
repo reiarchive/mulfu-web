@@ -45,7 +45,7 @@
                               <span class="icon-menu"></span>
                               <span class="icon-menu"></span>
                          </button>
-                         <a href="index.html" class="navbar-brand"><img src="../assets/img/logo.png" alt="" /></a>
+                         <a href="/" class="navbar-brand"><img src="../assets/img/logo.png" alt="" /></a>
                     </div>
                     <div class="collapse navbar-collapse" id="main-navbar">
                          <ul class="navbar-nav mr-auto w-100 justify-content-left clearfix">
@@ -254,7 +254,7 @@
                     </div>
                </div>
                <div class="row">
-                    <div class="col-sm-6 col-md-6 col-lg-8">
+                    <div class="col-12">
                          <!-- Team Item Starts -->
                          <div class="text-left">
                               <div>
@@ -263,15 +263,10 @@
                               <div>
                                    <h5 style="font-weight: 400; color: #440b55">1. Upload file kamu di kotak diatas</h5>
                                    <h5 style="font-weight: 400; color: #440b55">2. Masukkan nomor wa dan filter (optional)</h5>
-                                   <h5 style="font-weight: 400; color: #440b55">3. Payment, dan selesai. Kamu tinggal menunggu file dikirim melalui whatsapp!</h5>
+                                   <h5 style="font-weight: 400; color: #440b55">3. Bayar, dan selesai. Kamu tinggal menunggu file dikirim melalui whatsapp!</h5>
                               </div>
-                              <a href="#hero-area"><button class="btn" style="background-color: #7e57a3; border-radius: 5px; max-width: 140px; padding: 10px">Cobain disini!</button></a>
+                              <a href="/"><button class="btn" style="background-color: #7e57a3; border-radius: 5px; max-width: 140px; padding: 10px">Cobain disini!</button></a>
                          </div>
-                         <!-- Team Item Ends -->
-                    </div>
-                    <div class="col-sm-6 col-md-6 col-lg-4">
-                         <!-- Team Item Starts -->
-                         <img class="" src="../assets/demo.gif" height="400" style="width: inherit" />
                          <!-- Team Item Ends -->
                     </div>
                </div>

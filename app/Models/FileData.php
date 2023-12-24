@@ -9,7 +9,7 @@ class FileData extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['file_id', 'real_file_name'];
+    protected $fillable = ['file_id', 'real_file_name', 'title', 'first_author', 'second_author'];
 
     public function UserTransaction()
     {
