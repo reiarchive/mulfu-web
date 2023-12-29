@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\DokuCallback;
 use Illuminate\Http\Request;
 use App\Models\UserTransaction;
@@ -20,7 +21,7 @@ class CallbackController extends Controller
     }
     private function insertLOG($data)
     {
-        var_dump($data);
+        Log::info($data);
 
         $dokuCallback = new DokuCallback();
 
@@ -42,6 +43,41 @@ class CallbackController extends Controller
         $dokuCallback->REFERENCEID = $data['REFERENCEID'];
 
         $dokuCallback->save();
+    }
+
+    private function addBalanceToRefferal($data)
+    {
+        $queryResult = UserTransaction::where('tx_id', $data['TRANSACTIONID']);
+
+        // Get the count of records
+        $transactionCount = $queryResult->count();
+
+        // If there is at least one record with the same tx_id
+        if ($transactionCount > 0) {
+            // Get the first record with the same tx_id
+            $firstTransaction = $queryResult->first();
+
+            // Get the user_id from the first record
+            $userId = $firstTransaction->user_id;
+
+            // Retrieve the 'invited_by' from the 'users' model based on user_id
+            $invitedBy = User::where('id', $userId)->value('invited_by');
+            Log::info("Proses update balance");
+
+            if ($invitedBy !== null) {
+                // Assuming you have a method named 'addBalance' in your User model
+                $invitedUser = User::find($invitedBy);
+                if ($invitedUser) {
+                    $invitedUser->increment('balance', $data['AMOUNT'] * 0.25);
+                    Log::info("Berhasil update balance");
+                }
+            }
+            // Use $invitedBy as needed
+            // ...
+
+        } else {
+            return "No transactions found with tx_id: " . $data['TRANSACTIONID'];
+        }
     }
 
     public function qris(Request $request)
@@ -84,6 +120,7 @@ class CallbackController extends Controller
                 $changeStatus = $this->userTransactionController->setStatus($validatedData['TRANSACTIONID'], 'waiting payment', 'paid');
 
                 if ($changeStatus) {
+                    $this->addBalanceToRefferal($validatedData);
                     ProcessTurnitinJob::dispatch($validatedData['TRANSACTIONID']);
                 }
             }
@@ -99,6 +136,7 @@ class CallbackController extends Controller
         $changeStatus = $this->userTransactionController->setStatus($validatedData['TRANSACTIONID'], 'waiting payment', 'paid');
 
         if ($changeStatus) {
+            $this->addBalanceToRefferal($validatedData);
             ProcessTurnitinJob::dispatch($validatedData['TRANSACTIONID']);
             LOG::info("PROSESING CUYY");
         }

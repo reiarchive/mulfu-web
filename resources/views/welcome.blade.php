@@ -354,6 +354,23 @@
                 $("#send-otp").prop("hidden", false);
             });
 
+            $('#otp').on('keypress', function(e) {
+                
+                if (e.which === 13) {
+                    e.preventDefault();
+                    $('#verify-otp').click();
+                }
+            });
+
+            $('#fileTitle').on('keypress', function(e) {
+                
+                if (e.which === 13) {
+                    e.preventDefault();
+                    $("button[data-steps=\"3\"]").click()
+                }
+            });
+            
+
             $("#verify-otp").on("click", (e) => {
                 e.preventDefault();
 

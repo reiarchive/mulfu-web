@@ -1,1 +1,1 @@
-root@instance-1:~/mulfu-web# ssh-agent bash -c 'ssh-add /root/.ssh/github; git push -u origin main'
+ssh-agent bash -c 'ssh-add /root/.ssh/github; git push -u origin main'

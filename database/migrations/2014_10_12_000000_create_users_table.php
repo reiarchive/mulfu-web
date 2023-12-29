@@ -20,6 +20,9 @@ class CreateUsersTable extends Migration
             $table->string('phone_number')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
+            $table->string('reffcode')->nullable();
+            $table->integer('invited_by')->nullable();
+            $table->float('balance')->default(0.0);
             $table->rememberToken();
             $table->timestamps();
         });
@@ -33,5 +36,6 @@ class CreateUsersTable extends Migration
     public function down()
     {
         Schema::dropIfExists('users');
+        
     }
 }

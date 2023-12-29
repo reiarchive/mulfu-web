@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use stdClass;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\OneTimePassword;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Facades\Crypt;
 
 class OTPController extends Controller
 {
@@ -43,12 +46,40 @@ class OTPController extends Controller
     {
         $user = new User();
         $user->phone_number = $phone_number;
+        $user->reffcode = Str::random(5);
         $user->save();
         return $user->id;
     }
 
+    private function setRefferal($phone_number, $refferal_code)
+    {
+        $userWithReferral = User::where('reffcode', $refferal_code)->first();
+
+        // Check if the user with the referral code exists
+        if ($userWithReferral) {
+
+            $referralCodeOwnerId = $userWithReferral->id;
+
+            if ($referralCodeOwnerId !== 0) {
+                try {
+                    $referedUser = User::where('phone_number', $phone_number)->first();
+                    $referredUserInvitedBy = $referedUser->invited_by;
+
+                    if ($referredUserInvitedBy === null && $referedUser->id !== $referralCodeOwnerId) {
+                        User::where('phone_number', $phone_number)->update(['invited_by' => $referralCodeOwnerId]);
+                    }
+                } catch (\Exception $e) {
+                    Log::info("[EXCEPTION OTP CONTROLLER setRefferal] " . $phone_number . " | " . $refferal_code . " | " . $e);
+                }
+            }
+        }
+    }
+
+    // TURN-M3YY3E1E
     public function sendOTP(Request $request)
     {
+        // Log::info(decrypt($request->cookie("refferal_code")));
+
         $phone_number = substr($request->phone_number, 0, 1) == '0' ? '62' . substr($request->phone_number, 1) : $request->phone_number;
 
         if (!User::where("phone_number", $phone_number)->exists()) {
@@ -93,11 +124,10 @@ class OTPController extends Controller
             if ($response->error == 0) {
                 return response()->json(["error" => 0, "message" => "OTP Successfully Sent"]);
             }
-            
-            return response()->json(["error" => 1, "message" => "Nomor whatsapp tidak ditemukan"]);
 
+            return response()->json(["error" => 1, "message" => "Nomor whatsapp tidak ditemukan"]);
         } catch (\Exception $e) {
-            var_dump($e);
+            Log::info("[EXCEPTION OTP CONTROLLER SendOTP] " . $e);
         }
     }
 
@@ -119,9 +149,25 @@ class OTPController extends Controller
             return response()->json(["error" => 1, "message" => "OTP Failed to verify"]);
         }
 
+        // Get refferal if exists
+        $referralCode = null;
+
+        try {
+            $decryptedReffCodeCookie = Crypt::decryptString($request->cookie("refferal_code"));
+            $referralCode = explode("|", $decryptedReffCodeCookie)[1];
+        } catch (DecryptException $e) {
+            $referralCode = false;
+        }
+
+
         if ($existingOTP->otp == $otp) {
             // Mark the OTP as used
             $existingOTP->update(['is_used' => 1]);
+
+            if ($referralCode) {
+                Log::info("REFF CODE " . $referralCode);
+                $this->setRefferal($phone_number, $referralCode);
+            }
 
             return response()->json(["error" => 0, "message" => "OTP Verified"]);
         } else {
