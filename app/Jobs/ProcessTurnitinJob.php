@@ -39,11 +39,14 @@ class ProcessTurnitinJob implements ShouldQueue
      * @return void
      */
 
-    private function sendInvoice($phone_number)
+    private function sendInvoice($phone_number, $fileIdArray)
     {
-        $requestId = uniqid();
-        $messageSendInvoice = str_replace('{{ nomor_file }}', $this->invoice_id, env("MESSAGE_SEND_INVOICE"));
-        Redis::publish('send_message', json_encode(["phone_number" => $phone_number, "message" => $messageSendInvoice, "request_id" => $requestId]));
+        for ($i = 0; $i < $fileIdArray; $i++) {
+            $requestId = uniqid();
+            $message = str_replace('{{ nomor_invoice }}', $this->invoice_id, env("MESSAGE_SEND_INVOICE"));
+            $message = str_replace('{{ nomor_file }}', $fileIdArray[$i], $message);
+            Redis::publish('send_message', json_encode(["phone_number" => $phone_number, "message" => $message, "request_id" => $requestId]));
+        }
 
         return true;
     }
@@ -61,17 +64,20 @@ class ProcessTurnitinJob implements ShouldQueue
             return false;
         }
 
-        $this->sendInvoice($userTransactions[0]->user->phone_number);
 
         Log::info($userTransactions);
-        
+
+        $fileIdArray = [];
+
         foreach ($userTransactions as $userTransaction) {
 
             Log::info('Job processing : ' . $userTransaction);
 
             try {
-                
+
                 $fileId = $userTransaction->file_id;
+                array_push($fileIdArray, $fileId);
+
                 $fileDetailData = FileData::where('file_id', $fileId)->first();
 
                 $userTransaction->status = "processing";
@@ -108,6 +114,10 @@ class ProcessTurnitinJob implements ShouldQueue
             } catch (\Exception $e) {
                 Log::info($e);
             }
+        }
+
+        if (count($fileIdArray) > 0) {
+            $this->sendInvoice($userTransactions[0]->user->phone_number, $fileIdArray);
         }
     }
 }

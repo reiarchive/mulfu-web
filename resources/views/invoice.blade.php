@@ -100,8 +100,11 @@
                                                                            </h5>
                                                                       </div>
                                                                       <div class="col-3 d-flex justify-content-end align-items-start">
-                                                                           <div class="status-item success">{{ $item['status'] }}</div>
+                                                                           <div class="status-item @if($item['status'] == 'waiting payment') waiting-payment @elseif($item['status'] == 'paid') paid @elseif($item['status'] == 'processing') processing @elseif($item['status'] == 'waiting for delivered') waiting-for-delivered @elseif($item['status'] == 'failed') failed @elseif($item['status'] == 'success') success @elseif($item['status'] == 'cancel') cancel @endif">
+                                                                                {{ $item['status'] }}
+                                                                           </div>
                                                                       </div>
+
                                                                  </div>
                                                                  <div class="row p-1">
                                                                       <div class="col-9">

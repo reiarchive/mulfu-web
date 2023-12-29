@@ -28,6 +28,19 @@
     <link rel="stylesheet" type="text/css" href="assets/css/main.css" />
     <!-- Responsive Style -->
     <link rel="stylesheet" type="text/css" href="assets/css/responsive.css" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V02S6HYPV9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-V02S6HYPV9');
+    </script>
 </head>
 
 <body>
@@ -129,12 +142,12 @@
                                                 <form class="text-left">
                                                     <div class="form-group input-whatsapp">
                                                         <label for="phoneNumber" class="label-form">Nomor whatsapp :</label>
-                                                        <input type="tel" class="form-control" id="phoneNumber" placeholder="62xxxxxxxxxx">
+                                                        <input type="text" class="form-control" id="phoneNumber" placeholder="62xxxxxxxxxx">
                                                     </div>
 
                                                     <div class="form-group input-otp" hidden>
                                                         <label for="phoneNumber" class="label-form">OTP :</label>
-                                                        <input type="tel" class="form-control" id="otp" placeholder="4 digit di wa kamu">
+                                                        <input type="text" class="form-control" id="otp" placeholder="4 digit di wa kamu">
                                                     </div>
 
                                                     <div class="form-group">
@@ -409,7 +422,11 @@
                         phone_number: phone_number
                     },
                     dataType: 'json',
+                    beforeSend: () => {
+                        $("#send-otp").prop("disabled", true);
+                    },
                     success: function(response) {
+                        $("#send-otp").prop("disabled", false);
                         if (response.error == 0) {
                             $("#phoneNumber").prop("disabled", true);
                             $("#send-otp").prop("hidden", true);
@@ -431,12 +448,23 @@
                         }
                     },
                     error: function(error) {
+                        $("#send-otp").prop("disabled", false);
+
                         Swal.fire({
                             title: "Gagal",
                             text: "OTP gagal dikirim, coba lagi yuk",
                             icon: "error"
                         });
                     }
+                });
+            });
+
+            $.each(['#phoneNumber', '#otp'], function(index, element) {
+                $(element).on('input', function() {
+                    // Remove non-numeric characters using a regular expression
+                    $(this).val(function(_, value) {
+                        return value.replace(/[^0-9]/g, '');
+                    });
                 });
             });
 
@@ -505,7 +533,7 @@
                         } else {
                             Swal.fire({
                                 title: "Gagal",
-                                text: "Link pembayaran gagal dibuat, coba lagi yuk",
+                                text: response.message,
                                 icon: "error"
                             });
                         }

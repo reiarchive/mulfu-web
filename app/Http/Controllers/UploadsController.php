@@ -43,7 +43,7 @@ class UploadsController extends Controller
                 ],
             ],
             'payment' => [
-                'payment_due_date' => 3,
+                'payment_due_date' => 180,
                 "payment_method_types" => [
                     "QRIS",
                 ]
@@ -106,6 +106,8 @@ class UploadsController extends Controller
 
     public function getUserId($phone_number)
     {
+        $phone_number = substr($phone_number, 0, 1) == '0' ? '62' . substr($phone_number, 1) : $phone_number;
+
         $user = User::where('phone_number', $phone_number)->first();
 
         if (!$user) {
@@ -119,7 +121,7 @@ class UploadsController extends Controller
     {
         $totalPrice = 0;
 
-        // Validate the incoming request
+        // Validate the i4ncoming request
         $validator = Validator::make($request->all(), [
             'files.*' => 'required|mimes:pdf,docx|max:2048000',
         ]);
@@ -170,8 +172,12 @@ class UploadsController extends Controller
     public function setDetailAndMakePayment(Request $request)
     {
         try {
+            
             $userId = $this->getUserId($request->phone_number);
-
+            
+            if(!$userId || $userId == 0) {
+                return response()->json(['error' => 1, 'message' => 'Nomor wa kamu tidak ditemukan, yuk ulangi langkah no 2'], 200);
+            }
 
             /* Set destination */
             $transactions = UserTransaction::where('req_id', $request->request_id)->get();
