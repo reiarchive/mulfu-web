@@ -7,9 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="Cek plagiarisme dengan mudah menggunakan Mulfu, solusi canggih untuk pengecekan Turnitin. Dapatkan layanan cek Turnitin gratis, cek plagiarisme online, dan login Turnitin secara praktis. Temukan apa itu Turnitin, cara cek Turnitin gratis, dan cek tingkat kemiripan tulisan dengan Mulfu. Cepat, akurat, dan aman.">
     <title>Cek Plagiarisme Turnitin Gratis dengan Mulfu - Pengecekan Cepat dan Akurat</title>
-    <link rel="shortcut icon" href="{{ secure_asset('/assets/img/logo-mulfu.png') }}" type="image/x-icon" sizes="16x16" />
-    <link rel="shortcut icon" href="{{ secure_asset('/assets/img/logo-mulfu.png') }}" type="image/x-icon" sizes="32x32" />
-    <meta property="og:image" content="/assets/img/logo-mulfu.png">
+    <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon">
+    <meta property="og:image" content="/assets/img/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap" rel="stylesheet" />
@@ -34,16 +33,6 @@
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V02S6HYPV9"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'G-V02S6HYPV9');
-    </script>
 </head>
 
 <body>
@@ -135,9 +124,8 @@
 
                                                 <div id="fileUploadList" style="width:100%"></div>
 
-                                                <label for="submit-files" class="label-form">Klik uploads untuk memulai submit file</label>
                                                 <div class="col-md-4 col-sm-6 mx-auto" style="margin-top: 15px;">
-                                                    <button class="btn btn-primary w-100 next-step" data-steps="2" style="background-color: #7e57a3" id="submit-file">Uploads</button>
+                                                    <button class="btn btn-primary w-100 next-step" data-steps="2" style="background-color: #7e57a3" id="submit-file">Submit</button>
                                                 </div>
 
                                             </div>
@@ -273,63 +261,45 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 text-center">
-                    <h4 class="my-3">Cek apa kata mahasiswa</h4>
-                    <h6 class="subtitle font-weight-normal">Testimoni ini diberikan oleh pengguna mulfu yang telah merasakan keuntungan memakai mulfu</h6>
+                    <h4 class="my-3">Check what our Customers are Saying</h4>
+                    <h6 class="subtitle font-weight-normal">You can relay on our amazing features list and also our customer services will be great experience for you without doubt</h6>
                 </div>
             </div>
             <!-- Row  -->
             <div class="owl-carousel owl-theme testi1 mt-4">
                 <!-- item -->
-                <div class="col-lg-6 text-center mx-auto">
+                <div class="col-12">
                     <div class="item">
                         <div class="card card-shadow border-0 mb-4">
-                            <div class="card-body mx-auto">
+                            <div class="card-body">
                                 <div class="position-relative thumb bg-success-gradiant d-inline-block text-white mb-4">Alexandra Calista</div>
-                                <h5 class="font-weight-light text-center">BAGUSS BANGETT, jujur gaa direpotin karena prosesnya cepet, lewat handphone pun bisa gamesti pake leptop. Terus serius nanyaa kak harganya segitu kaah? MURAH BGTT 😭😭 Terus gasampe dua menit file yang udah diturnitin langsung dikirim via WhatsApp, kereen!</h5>
+                                <h5 class="font-weight-light">BAGUSS p, kereen!</h5>
                                 <span class="devider d-inline-block my-3"></span>
                                 <h6 class="font-weight-normal">Universitas Indonesia</h6>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- item -->
-                <!-- item -->
-                <div class="col-lg-6 text-center mx-auto">
+                <div class="col-12">
                     <div class="item">
                         <div class="card card-shadow border-0 mb-4">
-                            <div class="card-body mx-auto">
-                                <div class="position-relative thumb bg-success-gradiant d-inline-block text-white mb-4">Abdu Rasyad Shalihuddin</div>
-                                <h5 class="font-weight-light text-center">Sudah sangat baik.. dan dapat memudahkan penggunanya untuk mengecek turnitin</h5>
+                            <div class="card-body">
+                                <div class="position-relative thumb bg-success-gradiant d-inline-block text-white mb-4">Alexandra Calista</div>
+                                <h5 class="font-weight-light">BAGUSS p, kereen!</h5>
                                 <span class="devider d-inline-block my-3"></span>
-                                <h6 class="font-weight-normal">Universitas Islam Jakarta</h6>
+                                <h6 class="font-weight-normal">Universitas Indonesia</h6>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- item -->
-                <!-- item -->
-                <div class="col-lg-6 text-center mx-auto">
+                <div class="col-12">
                     <div class="item">
                         <div class="card card-shadow border-0 mb-4">
-                            <div class="card-body mx-auto">
-                                <div class="position-relative thumb bg-success-gradiant d-inline-block text-white mb-4">Lintang Herninda Warsito</div>
-                                <h5 class="font-weight-light text-center">Hasilnya cepat, dan bagus, juga mudah dipakai dan dipahami</h5>
+                            <div class="card-body">
+                                <div class="position-relative thumb bg-success-gradiant d-inline-block text-white mb-4">Alexandra Calista</div>
+                                <h5 class="font-weight-light">BAGUSS p, kereen!</h5>
                                 <span class="devider d-inline-block my-3"></span>
-                                <h6 class="font-weight-normal">Universitas Singaperbangsa Karawang</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- item -->
-                <!-- item -->
-                <div class="col-lg-6 text-center mx-auto">
-                    <div class="item">
-                        <div class="card card-shadow border-0 mb-4">
-                            <div class="card-body mx-auto">
-                                <div class="position-relative thumb bg-success-gradiant d-inline-block text-white mb-4">Naila</div>
-                                <h5 class="font-weight-light text-center">Proses turnitin sangat cepat (ditambah saat pengecekan sudah lumayan larut malam) dan sangat membantu sekali untuk mahasiswa yg membutuhkan proses pengecekan turnitin, untuk websitenya mudah sekali untuk dipahami proses input file dan otp wa serta pembayarannya</h5>
-                                <span class="devider d-inline-block my-3"></span>
-                                <h6 class="font-weight-normal">Universitas Pakuan</h6>
+                                <h6 class="font-weight-normal">Universitas Indonesia</h6>
                             </div>
                         </div>
                     </div>

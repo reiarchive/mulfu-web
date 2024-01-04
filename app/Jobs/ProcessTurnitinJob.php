@@ -41,7 +41,7 @@ class ProcessTurnitinJob implements ShouldQueue
 
     private function sendInvoice($phone_number, $fileIdArray)
     {
-        for ($i = 0; $i < $fileIdArray; $i++) {
+        for ($i = 0; $i < count($fileIdArray); $i++) {
             $requestId = uniqid();
             $message = str_replace('{{ nomor_invoice }}', $this->invoice_id, env("MESSAGE_SEND_INVOICE"));
             $message = str_replace('{{ nomor_file }}', $fileIdArray[$i], $message);
@@ -93,6 +93,7 @@ class ProcessTurnitinJob implements ShouldQueue
                         'process' => $randomProcess->class_id,
                         'fileId' => $fileId,
                         'phoneNumber' => $userTransaction->user->phone_number,
+                        'referral' => $userTransaction->user->reffcode,
                         'file' => [
                             'title' => $fileDetailData['title'],
                             'first_author' => $fileDetailData['first_author'],
@@ -108,7 +109,7 @@ class ProcessTurnitinJob implements ShouldQueue
 
                     DB::commit();
                 } else {
-                    Log::info("ROLLBACK");
+                    Log::info("ROLLBACK PROSES ABIS");
                     DB::rollBack();
                 }
             } catch (\Exception $e) {

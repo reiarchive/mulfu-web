@@ -24,6 +24,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('/2', function () {
+
+    if (request()->has('ref')) {
+        $referralCode = request('ref');
+        return response()->view('welcome')->cookie('refferal_code', $referralCode, 7 * 24 * 60);
+    }
+
+    return view('welcome2');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

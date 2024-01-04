@@ -208,6 +208,7 @@ a.back-to-top {
     bottom: 18px;
     right: 15px;
     text-decoration: none;
+    z-index: 1;
 }
 
 a.back-to-top i {
@@ -1441,9 +1442,78 @@ textarea {
 }
 
 .form-hidden {
-    display:none;
+    display: none;
 }
 
 .label-form {
     color: #000000;
+}
+
+.testimonial1 {
+    font-family: "Montserrat", sans-serif;
+    color: #8d97ad;
+    font-weight: 300;
+}
+
+.testimonial1 h1,
+.testimonial1 h2,
+.testimonial1 h3,
+.testimonial1 h4,
+.testimonial1 h5,
+.testimonial1 h6 {
+    color: #3e4555;
+}
+
+.testimonial1 .bg-light {
+    background-color: #f4f8fa !important;
+}
+
+.testimonial1 .subtitle {
+    color: #8d97ad;
+    line-height: 24px;
+}
+
+.testimonial1 .testi1 .card-body {
+    padding: 35px;
+}
+
+.testimonial1 .testi1 .thumb {
+    padding: 10px 20px 10px;
+}
+
+.testimonial1 .testi1 .thumb .thumb-img {
+    width: 60px;
+    left: 20px;
+    top: -10px;
+}
+
+.testimonial1 .testi1 h5 {
+    line-height: 30px;
+    font-size: 18px;
+}
+
+.testimonial1 .testi1 .devider {
+    height: 1px;
+    background: rgba(120, 130, 140, 0.13);
+    width: 100px;
+}
+
+.testimonial1 .bg-success-gradiant {
+    background: #7e57a3;
+}
+
+.testimonial1 .card.card-shadow {
+    -webkit-box-shadow: 0px 0px 30px rgba(115, 128, 157, 0.1);
+    box-shadow: 0px 0px 30px rgba(115, 128, 157, 0.1);
+}
+
+.testimonial1 .owl-theme .owl-dots .owl-dot.active span,
+.testimonial1 .owl-theme .owl-dots .owl-dot:hover span {
+    background: #316ce8;
+}
+
+.owl-carousel .owl-stage,
+.owl-carousel.owl-drag .owl-item {
+    -ms-touch-action: auto;
+    touch-action: auto;
 }

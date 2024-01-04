@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 
 use App\Models\UserTransaction;
 use App\Jobs\ProcessTurnitinJob;
+use App\Models\TurnitinAvailable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\UserTransactionController;
 
@@ -92,5 +94,58 @@ class TurnitinController extends Controller
         // var_dump($invoice[0]);
 
         return view('invoice', ['status' => $invoice, 'phone_number' => $invoice[0]->user->phone_number]);
+    }
+
+    public function changeProcess(Request $request)
+    {
+
+        $file_id = $request->file_id;
+        // UPDATE FROM turnitin_availables SET used_by = "NON REUSEABLE ERROR" WHERE used_by = $file_id
+
+        try {
+
+            $existingRecord = TurnitinAvailable::where('used_by', $file_id)->exists();
+
+            // if(!$existingRecord) {
+            //     return response()->json(["error" => 1, "message" => "file id not found"]);
+            // }
+
+            TurnitinAvailable::where('used_by', $file_id)->update(['used_by' => 'NON REUSABLE ERROR']);
+
+            // Begin a database transaction
+            DB::beginTransaction();
+
+            // Find a random available process that is not already in use
+            $randomProcess = TurnitinAvailable::where('is_used', 0)->inRandomOrder()->first();
+
+            // Check if a process is available
+            if ($randomProcess) {
+                // Update the process to mark it as used
+                $randomProcess->update(['is_used' => 1, 'used_by' => $file_id]);
+
+                // Log the process change
+                Log::info("Changing process $file_id to " . $randomProcess->class_id);
+
+                // Commit the transaction
+                DB::commit();
+
+                // Return success response
+                return response()->json(["error" => 0, "process_id" => $randomProcess->class_id]);
+            } else {
+                // Log if no process is available
+                return response()->json(["error" => 1, "message" => "No available process found"]);
+                Log::info("No available process found");
+            }
+
+        } catch (\Exception $e) {
+            // Handle exceptions and log the error
+            Log::error("Error: " . $e->getMessage());
+
+            // Rollback the transaction in case of an exception
+            DB::rollBack();
+        }
+
+        // Return an error response if something went wrong
+        return response()->json(["error" => 1, "message" => "Unable to process request"]);
     }
 }
