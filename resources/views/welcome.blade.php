@@ -147,6 +147,7 @@
                                                     <div class="form-group input-whatsapp">
                                                         <label for="phoneNumber" class="label-form">Nomor whatsapp :</label>
                                                         <input type="text" class="form-control" id="phoneNumber" placeholder="62xxxxxxxxxx">
+                                                        <span class="label-form" id="otplimit"></span>
                                                     </div>
 
                                                     <div class="form-group input-otp" hidden>
@@ -164,6 +165,16 @@
                                                         <label for="fileTitle" class="label-form">Judul :</label>
                                                         <input type="text" class="form-control" id="fileTitle" placeholder="Judul (Optional)">
                                                     </div>
+<!-- 
+                                                    <div class="form-group" form-hidden>
+                                                        <label for="filterCheckbox" class="label-form">Filter</label>
+                                                        <br>
+
+                                                        <div class="form-check form-check-inline">
+                                                            <input type="checkbox" class="form-check-input" id="filterCheckbox">
+                                                            <label class="form-check-label" for="filterCheckbox">Exclude Bibliography</label>
+                                                        </div>
+                                                    </div> -->
 
                                                     <div class="form-group" hidden>
                                                         <label for="firstAuthorName" class="label-form">Author pertama:</label>
@@ -499,6 +510,34 @@
                 });
             });
 
+            var intervalId;
+
+            const makeCountdown = async (timeinms) => {
+                clearInterval(intervalId);
+
+                const countdownElement = $("#otplimit");
+
+                // Set initial text
+                countdownElement.text(`Ulangi setelah ${timeinms / 1000} second`);
+
+                // Update countdown every second
+                intervalId = setInterval(() => {
+                    timeinms -= 1000;
+
+                    // Check if the countdown has reached zero
+                    if (timeinms <= 0) {
+                        clearInterval(intervalId); // Stop the countdown
+                        countdownElement.text("Sudah bisa send OTP lagi"); // Set back to the original text or any desired text
+                    } else {
+                        // Update countdown text
+                        countdownElement.text(`Ulangi setelah ${timeinms / 1000} second`);
+                    }
+                }, 1000);
+
+                // Store the interval ID for later use
+                return intervalId;
+            };
+
             $("#send-otp").on("click", (e) => {
                 e.preventDefault();
 
@@ -539,13 +578,23 @@
                         }
                     },
                     error: function(error) {
+
                         $("#send-otp").prop("disabled", false);
 
-                        Swal.fire({
-                            title: "Gagal",
-                            text: "OTP gagal dikirim, coba lagi yuk",
-                            icon: "error"
-                        });
+                        if (error.responseJSON.error == 3) {
+                            makeCountdown(error.responseJSON.time);
+                            Swal.fire({
+                                title: "Gagal",
+                                text: error.responseJSON.message,
+                                icon: "error"
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Gagal",
+                                text: "OTP gagal dikirim, coba lagi yuk",
+                                icon: "error"
+                            });
+                        }
                     }
                 });
             });

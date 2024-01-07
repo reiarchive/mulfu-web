@@ -130,7 +130,7 @@ class TurnitinController extends Controller
                 DB::commit();
 
                 // Return success response
-                return response()->json(["error" => 0, "process_id" => $randomProcess->class_id]);
+                return response()->json(["error" => 0, "email" => $randomProcess->username, "domain" => $randomProcess->domain, "process_id" => $randomProcess->class_id]);
             } else {
                 // Log if no process is available
                 return response()->json(["error" => 1, "message" => "No available process found"]);

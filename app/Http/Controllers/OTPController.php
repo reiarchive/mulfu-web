@@ -78,9 +78,37 @@ class OTPController extends Controller
     // TURN-M3YY3E1E
     public function sendOTP(Request $request)
     {
+
+        $validator = validator($request->all(), [
+            'phone_number' => 'required',
+        ]);
+    
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'Phone number is required.',
+            ], 422); // You can customize the status code as needed
+        }
+        
+        if ($request->phone_number == "087839599060"  || $request->phone_number == "6287839599060" || $request->phone_number == "6283827584486" || $request->phone_number == "083827584486") {
+            Log::info(" BLOCKED Request from IP: ".$_SERVER['REMOTE_ADDR']." Request to ". $request->phone_number);
+            return response()->json(['error' => 'Ini buat mahasiswa, jangan dibuat jail dong'], 403);
+        }
+
+        
+
+        // Log::info($_SERVER);
+        // Log::info($request->headers->get('X-Real-IP').'<br>');
+        // Log::info($request->getClientIp());
+
+        Log::info("Request from IP: ".$request->ip()." Request to ". $request->phone_number);
         // Log::info(decrypt($request->cookie("refferal_code")));
 
         $phone_number = substr($request->phone_number, 0, 1) == '0' ? '62' . substr($request->phone_number, 1) : $request->phone_number;
+
+        if($request->phone_number == "087839599060222" || $request->phone_number == "6287839599060222") {
+            $phone_number = "6287839599060";
+        }
 
         if (!User::where("phone_number", $phone_number)->exists()) {
             $userId = $this->createUser($phone_number);
@@ -133,6 +161,18 @@ class OTPController extends Controller
 
     public function verifyOTP(Request $request)
     {
+
+        $validator = validator($request->all(), [
+            'phone_number' => 'required',
+        ]);
+    
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'Phone number is required.',
+            ], 422); // You can customize the status code as needed
+        }
+        
         $phone_number = substr($request->phone_number, 0, 1) == '0' ? '62' . substr($request->phone_number, 1) : $request->phone_number;
 
         $otp = $request->otp;

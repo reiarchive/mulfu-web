@@ -123,9 +123,10 @@ class UploadsController extends Controller
 
         // Validate the i4ncoming request
         $validator = Validator::make($request->all(), [
+            'files' => 'required|array',
             'files.*' => 'required|mimes:pdf,docx|max:2048000',
         ]);
-
+        
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }

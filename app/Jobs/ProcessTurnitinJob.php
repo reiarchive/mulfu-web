@@ -90,6 +90,10 @@ class ProcessTurnitinJob implements ShouldQueue
                 if ($randomProcess) {
 
                     $postData = [
+                        'turndata' => [
+                            'email' => $randomProcess->username,
+                            'domain' => $randomProcess->domain
+                        ],
                         'process' => $randomProcess->class_id,
                         'fileId' => $fileId,
                         'phoneNumber' => $userTransaction->user->phone_number,
